@@ -4,7 +4,7 @@ const { json } = require("express")
 
 // GET All Products
 const getAllProducts = asyncHandler(async (req, res) => {
-    const products = await Products.find()
+    const products = await Products.find({ user: req.user.id })
     res.status(200).json(products)
 })
 
@@ -17,7 +17,8 @@ const createNewProduct = asyncHandler(async (req, res) => {
     }
 
     const product = await Products.create({
-        text: req.body.text
+        text: req.body.text,
+        user: req.user.id
     })
     res.status(200).json(product)
 })

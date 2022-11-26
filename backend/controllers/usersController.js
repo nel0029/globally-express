@@ -2,7 +2,6 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const { use } = require('../routes/productsRoutes')
 
 // POST Register a User
 const registerUser = asyncHandler(async (req, res) => {
@@ -12,7 +11,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('Please add all fields')
     }
     //Check user existence in database
-    const userExists = User.findOne({ email })
+    const userExists = await User.findOne({ email })
 
     if (userExists) {
         res.status(400)
@@ -34,7 +33,8 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(201).json({
             _id: user.id,
             name: user.name,
-            email: user.email
+            email: user.email,
+            token: generateToken(user._id)
         })
     } else {
         res.status(400)
@@ -44,13 +44,39 @@ const registerUser = asyncHandler(async (req, res) => {
 
 // POST Login a User
 const logInUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body
 
+    const user = await User.findOne({ email })
+    if (user && (await bcrypt.compare(password, user.password))) {
+        res.status(200).json({
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user._id)
+        })
+    } else {
+        res.status(400)
+        throw new Error('Invalid User Data')
+    }
 })
 
 // GET Get user information
 const getUserInfo = asyncHandler(async (req, res) => {
+    const { _id, name, email } = await User.findById(req.user.id)
 
+    res.status(200).json({
+        id: _id,
+        name,
+        email,
+    })
 })
+
+// Generate JWT
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '30d'
+    })
+}
 
 
 module.exports = {
