@@ -1,9 +1,11 @@
 const asyncHandler = require('express-async-handler')
+const Products = require('../models/productsModel')
 const { json } = require("express")
 
 // GET All Products
 const getAllProducts = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: "All Products" })
+    const products = await Products.find()
+    res.status(200).json(products)
 })
 
 // POST Create new product
@@ -13,17 +15,39 @@ const createNewProduct = asyncHandler(async (req, res) => {
 
         throw new Error('Please add some text')
     }
-    res.status(200).json({ message: "Product Posted" })
+
+    const product = await Products.create({
+        text: req.body.text
+    })
+    res.status(200).json(product)
 })
 
 // PUT Update a product
 const updateProduct = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Product ${req.params.id} has been updated` })
+    const product = await Products.findById(req.params.id)
+
+    if (!product) {
+        res.status(400)
+        throw new Error('Product not existed')
+    }
+
+    const updatedProduct = await Products.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+    })
+
+    res.status(200).json(updatedProduct)
 })
 
 // DELETE Delete a product
 const deleteProduct = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Product ${req.params.id} has been deleted` })
+    const product = await Products.findById(req.params.id)
+    if (!product) {
+        res.status(400)
+        throw new Error('Product not existed')
+    }
+
+    await product.remove()
+    res.status(200).json({ id: req.params.id })
 })
 
 module.exports = {
