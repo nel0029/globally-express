@@ -9,11 +9,12 @@ const { DeletePostDataController } = require('../controllers/PostsControllers/De
 const { createNewPost } = require('../controllers/PostsControllers/createNewPost')
 const { createNewReply } = require('../controllers/PostsControllers/createNewReply')
 const { createNewRepost } = require('../controllers/PostsControllers/createNewRepost')
+const { createNewLike } = require('../controllers/PostsControllers/createNewLike')
 
 const { protect } = require('../middleware/authMiddleware')
 
 
-
+router.post()
 
 router.route('/')
     .post(protect, CreatePostDataController)

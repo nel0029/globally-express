@@ -33,8 +33,11 @@ const createNewLike = asyncHandler(async () => {
         });
 
         if (likeExists) {
+
             res.status(400).json({ message: "You already like this post" })
+
         } else {
+
             if (parentExists) {
                 const newLike = new Likes({
                     userID: userExists._id,
