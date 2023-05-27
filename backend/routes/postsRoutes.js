@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const { CreatePostDataController } = require('../controllers/postscontrollers/CreatePostDataController')
-const { ReadPostDataController } = require('../controllers/postscontrollers/ReadPostDataController')
-const { UpdatePostDataController } = require('../controllers/postscontrollers/UpdatePostDataController')
-const { DeletePostDataController } = require('../controllers/postscontrollers/DeletePostDataController')
+const { CreatePostDataController } = require('../controllers/PostsControllers/CreatePostDataController')
+const { ReadPostDataController } = require('../controllers/PostsControllers/ReadPostDataController')
+const { UpdatePostDataController } = require('../controllers/PostsControllers/UpdatePostDataController')
+const { DeletePostDataController } = require('../controllers/PostsControllers/DeletePostDataController')
 
 const { protect } = require('../middleware/authMiddleware')
 
