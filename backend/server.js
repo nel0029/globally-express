@@ -14,8 +14,9 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.use('/', require('./routes/postsRoutes'))
-app.use('/user', require('./routes/userRoutes'))
+app.use(require('./routes/postsRoutes'))
+app.use(require('./routes/userFollowRoutes'))
+app.use(require('./routes/userRoutes'))
 
 app.use(errorHandler)
 

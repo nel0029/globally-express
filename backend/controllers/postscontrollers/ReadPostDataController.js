@@ -1,22 +1,24 @@
 const { Posts, Replies, Reposts, Likes } = require('../../models/postsModel');
-const { Users } = require('../../models/userModel');
+const { Users, Following } = require('../../models/userModel');
 const asyncHandler = require('express-async-handler');
 
 const combinePublicData = asyncHandler(async (req, res) => {
     const userID = req.query.userID; // Assuming you have the current user ID stored in req.userId
 
+
     const postsQuery = await Posts.find().sort({ createdAt: -1 }).lean().exec();
     const repliesQuery = await Replies.find().sort({ createdAt: -1 }).lean().exec();
     const repostsQuery = await Reposts.find().sort({ createdAt: -1 }).lean().exec();
     const likesQuery = await Likes.find().sort({ createdAt: -1 }).lean().exec();
+    const followingQuery = await Following.find({ followerID: userID }).sort().lean().exec();
 
-    const [posts, replies, reposts, likes] = await Promise.all([
+    const [posts, replies, reposts, likes, following] = await Promise.all([
         postsQuery,
         repliesQuery,
         repostsQuery,
-        likesQuery
+        likesQuery,
+        followingQuery
     ]);
-
     const combinedData = [...posts, ...replies, ...reposts];
 
     const userIds = combinedData.map((item) => item.userID); // Extract all unique user IDs from the combined data
@@ -50,6 +52,9 @@ const combinePublicData = asyncHandler(async (req, res) => {
         item.liked = likes.some((like) => {
             return like.parentID === String(item._id) && like.userID === userID;
         });
+        item.followed = following.some((follow) => {
+            return follow.followingID === item.userID && follow.followerID === userID
+        })
         const userData = userMap[item.userID];
         item.postAuthorFirstName = userData.userFirstName;
         item.postAuthorMiddleName = userData.userMiddleName;
@@ -80,6 +85,16 @@ const combinePublicData = asyncHandler(async (req, res) => {
             item.likeID = like._id;
         } else {
             item.likeID = null;
+        }
+
+        const follow = following.find((follow) => {
+            return follow.followingID === item.userID && follow.followerID === userID
+        })
+
+        if (follow) {
+            item.followingID = follow._id;
+        } else {
+            item.followingID = null;
         }
     });
 

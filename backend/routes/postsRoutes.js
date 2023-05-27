@@ -6,7 +6,14 @@ const { ReadPostDataController } = require('../controllers/PostsControllers/Read
 const { UpdatePostDataController } = require('../controllers/PostsControllers/UpdatePostDataController')
 const { DeletePostDataController } = require('../controllers/PostsControllers/DeletePostDataController')
 
+const { createNewPost } = require('../controllers/PostsControllers/createNewPost')
+const { createNewReply } = require('../controllers/PostsControllers/createNewReply')
+const { createNewRepost } = require('../controllers/PostsControllers/createNewRepost')
+
 const { protect } = require('../middleware/authMiddleware')
+
+
+
 
 router.route('/')
     .post(protect, CreatePostDataController)

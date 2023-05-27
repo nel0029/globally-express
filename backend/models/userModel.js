@@ -34,7 +34,16 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    privacy: String,
+    private: {
+        type: Boolean,
+        default: false
+    },
+    followingCounts: {
+        type: Number
+    },
+    followersCounts: {
+        type: Number
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -53,7 +62,7 @@ userSchema.pre('save', function (next) {
 
 
 const followingSchema = new mongoose.Schema({
-    followedID: String,
+    followingID: String,
     followerID: String,
     createdAt: {
         type: Date,
