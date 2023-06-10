@@ -4,9 +4,10 @@ const asyncHandler = require('express-async-handler')
 
 const createNewRepost = asyncHandler(async (req, res) => {
 
-    const { userID, postID, parentType, caption, mediaURL } = req.body
+    const { authorID, parentAuthorID, postID, parentType, caption, mediaURL } = req.body
 
-    const userExists = await Users.findById(userID)
+    const userExists = await Users.findById(authorID)
+
 
     if (userExists) {
 
@@ -28,12 +29,16 @@ const createNewRepost = asyncHandler(async (req, res) => {
         }
 
         if (parentExists) {
+            const parentUserName = await Users.findById(parentExists.authorID)
             const newRepost = await Reposts.create({
-                userID: userExists._id,
-                parentID: parentExists._id,
+                authorID: userExists._id,
+                parentPostID: parentExists._id,
                 parentType: parentExists.type,
-                parentUserID: parentExists.userID,
-                type: type,
+                parentAuthorID: parentExists.authorID,
+                postAuthorUserName: userExists.userName,
+                parentUserName: parentUserName.userName,
+                parentPostID: parentExists._id,
+                type: "repost",
                 caption: caption,
                 mediaURL: mediaURL,
                 likesCount: 0,
@@ -41,26 +46,28 @@ const createNewRepost = asyncHandler(async (req, res) => {
                 repostsCount: 0,
             });
 
-            await parentExists.updateOne({ $inc: { [countField]: 1 } });
-            const parentAuthor = await Users.findById(parentExists.userID)
+            await parentExists.updateOne({ $inc: { repostsCount: 1 } });
+            const parentAuthor = await Users.findById(parentExists.authorID)
 
             const repostResponse = {
                 _id: newRepost._id,
-                userID: newRepost.userID,
+                authorID: newRepost.authorID,
+                parentPostID: newRepost.parentPostID,
                 type: newRepost.type,
                 caption: newRepost.caption,
                 mediaURL: newRepost.mediaURL,
-                likesCount: newRepost.likesCount,
-                repliesCount: newRepost.repliesCount,
-                repostsCount: newRepost.repostsCount,
+                likesCount: 0,
+                repliesCount: 0,
+                repostsCount: 0,
                 parentType: newRepost.parentType,
+                parentID: newRepost.parentID,
                 postAuthorFirstName: userExists.userFirstName,
                 postAuthorMiddleName: userExists.userMiddleName,
                 postAuthorLastName: userExists.userLastName,
-                userName: userExists.userName,
-                avatarURL: userExists.avatarURL,
+                postAuthorUserName: userExists.userName,
+                postAuthorAvatarURL: userExists.avatarURL,
                 createdAt: newRepost.createdAt,
-                parentUserID: parentAuthor._id,
+                parentAuthorID: parentAuthor._id,
                 parentUserName: parentAuthor.userName,
                 parentAuthorFirstName: parentAuthor.userFirstName,
                 parentAuthorMiddleName: parentAuthor.userMiddleName,
@@ -83,6 +90,4 @@ const createNewRepost = asyncHandler(async (req, res) => {
 
 })
 
-module.exports = {
-    createNewRepost
-}
+module.exports = createNewRepost

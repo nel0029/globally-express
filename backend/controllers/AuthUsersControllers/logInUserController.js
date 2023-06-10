@@ -5,10 +5,15 @@ const { generateToken } = require('./generateToken')
 
 
 const logInUser = asyncHandler(async (req, res) => {
-    const { email, userName, password } = req.body
+    const { logInID, password } = req.body
 
-    const user = await Users.findOne({ userName })
+    const user = await Users.findOne({
+        $or: [{ userName: logInID }, { email: logInID }],
+    });
+
+
     if (user && (await bcrypt.compare(password, user.password))) {
+
         res.status(200).json({
             userID: user._id,
             userName: user.userName,

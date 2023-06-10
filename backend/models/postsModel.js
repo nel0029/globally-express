@@ -1,22 +1,21 @@
 const mongoose = require('mongoose')
-const User = require('./userModel')
+const { Users } = require('./userModel')
 const moment = require('moment-timezone');
-
+const { ObjectId } = require('mongodb');
 
 
 const postsSchema = mongoose.Schema({
 
-    userID: String,
+    authorID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
     type: String,
-    postAuthorFirstName: String,
     privacy: String,
-    postAuthorMiddleName: String,
-    postAuthorLastName: String,
-    postAuthorUserName: String,
     caption: String,
     mediaURL: [String],
-    repliesCount: Number,
     likesCount: Number,
+    repliesCount: Number,
     repostsCount: Number,
     createdAt: {
         type: Date,
@@ -37,17 +36,19 @@ postsSchema.pre('save', function (next) {
 
 const repliesSchema = mongoose.Schema({
 
-    userID: String,
-    userName: String,
+    authorID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
     type: String,
-    parentID: String,
+    parentPostID: ObjectId,
+    parentAuthorID: ObjectId,
     parentType: String,
-    parentUserID: String,
     privacy: String,
     caption: String,
     mediaURL: [String],
-    repliesCount: Number,
     likesCount: Number,
+    repliesCount: Number,
     repostsCount: Number,
     createdAt: {
         type: Date,
@@ -67,20 +68,19 @@ repliesSchema.pre('save', function (next) {
 
 const repostsSchema = mongoose.Schema({
 
-    userID: String,
+    authorID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
     type: String,
-    parentID: String,
-    parentUserID: String,
+    parentPostID: ObjectId,
+    parentAuthorID: ObjectId,
     parentType: String,
-    postAuthorFirstName: String,
-    postAuthorMiddleName: String,
-    postAuthorLastName: String,
-    postAuthorUserName: String,
     privacy: String,
     caption: String,
     mediaURL: [String],
-    repliesCount: Number,
     likesCount: Number,
+    repliesCount: Number,
     repostsCount: Number,
     createdAt: {
         type: Date,
@@ -99,9 +99,12 @@ repostsSchema.pre('save', function (next) {
 });
 
 const likesSchema = mongoose.Schema({
-    userID: String,
+    authorID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
     type: String,
-    parentID: String,
+    parentPostID: ObjectId,
     parentType: String,
     privacy: String,
     createdAt: {

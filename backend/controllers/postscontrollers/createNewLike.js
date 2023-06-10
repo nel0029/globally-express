@@ -1,12 +1,13 @@
 const { Users } = require('../../models/userModel')
-const { Posts, Replies, Reposts } = require('../../models/postsModel')
+const { Posts, Replies, Reposts, Likes } = require('../../models/postsModel')
 const asyncHandler = require('express-async-handler')
 
-const createNewLike = asyncHandler(async () => {
+const createNewLike = asyncHandler(async (req, res) => {
 
-    const { userID, postID, parentType } = req.body
+    const { authorID, postID, parentType } = req.body
 
-    const userExists = await Users.findById(userID)
+    const userExists = await Users.findById(authorID)
+    const likeExist = await Likes.findOne({ $and: [{ parentID: postID }, { authorID: String(userExists._id) }] })
 
     if (userExists) {
 
@@ -25,12 +26,7 @@ const createNewLike = asyncHandler(async () => {
             default: res.status(400).json({ message: "Invalid Parent Typpe" })
         }
 
-        const likeExists = await Likes.findOne({
-            userID: userExists._id,
-            parentID: parentExists._id,
-            parentType: parentExists.type,
-            type: 'like',
-        });
+        const likeExists = await Likes.findOne({ $and: [{ _id: postID }, { authorID: String(userExists._id) }] });
 
         if (likeExists) {
 
@@ -40,19 +36,19 @@ const createNewLike = asyncHandler(async () => {
 
             if (parentExists) {
                 const newLike = new Likes({
-                    userID: userExists._id,
-                    parentID: parentExists._id,
+                    authorID: userExists._id,
+                    parentPostID: parentExists._id,
                     parentType: parentExists.type,
                     type: 'like',
                 });
 
                 await newLike.save();
 
-                await parentExists.updateOne({ $inc: { [countField]: 1 } });
+                await parentExists.updateOne({ $inc: { likesCount: 1 } });
                 const reponseLike = {
                     _id: newLike._id.toString(),
-                    userID: newLike.userID,
-                    parentID: newLike.parentID,
+                    postAuthorID: newLike.authorID,
+                    parentID: newLike.parentPostID,
                     parentType: newLike.parentType,
                     type: newLike.type
                 }
@@ -69,6 +65,4 @@ const createNewLike = asyncHandler(async () => {
 
 })
 
-module.exports = {
-    createNewLike
-}
+module.exports = createNewLike

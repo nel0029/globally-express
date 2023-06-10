@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler')
-const { User } = require('../../models/userModel')
+const { Users } = require('../../models/userModel')
 const { generateToken } = require('./generateToken')
 const bcrypt = require('bcryptjs')
 
@@ -10,7 +10,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('Please add all fields')
     }
     //Check user existence in database
-    const userExists = await User.findOne({ email })
+    const userExists = await Users.findOne({ email })
 
     if (userExists) {
         res.status(400)
@@ -22,7 +22,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt)
 
     // Create the User
-    const user = await User.create({
+    const user = await Users.create({
         userFirstName,
         userMiddleName,
         userLastName,

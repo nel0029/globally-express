@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const moment = require('moment-timezone');
+const { ObjectId } = require('mongodb');
 
 
 
@@ -38,12 +39,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    followingCounts: {
-        type: Number
-    },
-    followersCounts: {
-        type: Number
-    },
+    coverPhotoURL: String,
+    bio: String,
+
+
     createdAt: {
         type: Date,
         default: Date.now
@@ -62,8 +61,8 @@ userSchema.pre('save', function (next) {
 
 
 const followingSchema = new mongoose.Schema({
-    followingID: String,
-    followerID: String,
+    followingID: ObjectId,
+    followerID: ObjectId,
     createdAt: {
         type: Date,
         default: Date.now
