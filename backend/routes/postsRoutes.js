@@ -13,7 +13,8 @@ const createNewReply = require('../controllers/postsControllers/createNewReply')
 const createNewRepost = require('../controllers/postsControllers/createNewRepost')
 const createNewLike = require('../controllers/postsControllers/createNewLike')
 const createNewPollResponse = require('../controllers/postsControllers/createNewPollResponse')
-const createNewPost = require('../controllers/postsControllers/createNewPost')
+//const createNewPost = require('../controllers/postsControllers/createNewPost')
+const createPost = require('../controllers/postsControllers/createPost')
 
 
 
@@ -44,7 +45,7 @@ const readAllLikesByUser = require('../controllers/postsControllers/readAllLikes
 
 
 
-router.post('/new/post', [protect, uploadMiddleware], createNewPost)
+router.post('/new/post', [protect, uploadMiddleware], createPost)
 router.post('/new/reply', [protect, uploadMiddleware], createNewReply)
 router.post('/new/repost', [protect, uploadMiddleware], createNewRepost)
 router.post('/new/like', protect, createNewLike)
