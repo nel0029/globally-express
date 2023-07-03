@@ -9,12 +9,12 @@ const uploadMiddleware = require('../middleware/uploadMiddleware')
 
 // Create Controllers
 
-const createNewReply = require('../controllers/postsControllers/createNewReply')
-const createNewRepost = require('../controllers/postsControllers/createNewRepost')
-const createNewLike = require('../controllers/postsControllers/createNewLike')
-const createNewPollResponse = require('../controllers/postsControllers/createNewPollResponse')
-//const createNewPost = require('../controllers/postsControllers/createNewPost')
-const createPost = require('../controllers/postsControllers/createPost')
+const createNewReply = require('../controllers/PostControllers/createNewReply')
+const createNewRepost = require('../controllers/PostControllers/createNewRepost')
+const createNewLike = require('../controllers/PostControllers/createNewLike')
+const createNewPollResponse = require('../controllers/PostControllers/createNewPollResponse')
+//const createNewPost = require('../controllers/PostControllers/createNewPost')
+const createPost = require('../controllers/PostControllers/createPost')
 
 
 
