@@ -24,7 +24,7 @@ const updatePost = asyncHandler(async (req, res) => {
             }
 
         } else {
-            console.log("post not found")
+
             res.status(404).json({ message: "Post not found" })
         }
 

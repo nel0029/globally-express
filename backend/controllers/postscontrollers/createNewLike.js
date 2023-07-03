@@ -1,13 +1,12 @@
-const { Users } = require('../../models/userModel')
 const { Posts, Replies, Reposts, Likes } = require('../../models/postsModel')
+const { Users } = require('../../models/userModel')
 const asyncHandler = require('express-async-handler')
 
 const createNewLike = asyncHandler(async (req, res) => {
 
-    const { authorID, postID, parentType } = req.body
+    const { authorID, postID, parentType, parentAuthorID } = req.body
 
     const userExists = await Users.findById(authorID)
-    const likeExist = await Likes.findOne({ $and: [{ parentID: postID }, { authorID: String(userExists._id) }] })
 
     if (userExists) {
 
@@ -40,6 +39,7 @@ const createNewLike = asyncHandler(async (req, res) => {
                     parentPostID: parentExists._id,
                     parentType: parentExists.type,
                     type: 'like',
+                    parentAuthorID: parentAuthorID
                 });
 
                 await newLike.save();

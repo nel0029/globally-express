@@ -4,6 +4,8 @@ const { Posts, Likes, Replies, Reposts } = require('../../models/postsModel');
 const { Users, Following } = require('../../models/userModel');
 const asyncHandler = require('express-async-handler');
 
+const basePath = process.env.BASE_PATH;
+
 const readAllPostsByUser = asyncHandler(async (req, res) => {
     const { userName } = req.params
     const { authorID } = req.query
@@ -79,7 +81,7 @@ const readAllPostsByUser = asyncHandler(async (req, res) => {
                     parentAvatarURL: { $arrayElemAt: ['$parentAuthor.avatarURL', 0] },
                     likesCount: { $size: '$likes' },
                     repliesCount: { $size: '$replies' },
-                    repostCount: { $size: '$reposts' },
+                    repostsCount: { $size: '$reposts' },
                     isLiked: {
                         $cond: [
                             { $in: [new ObjectId(authorID), '$likes.authorID'] },

@@ -1,6 +1,8 @@
 const { Posts, Replies, Reposts, Likes } = require('../../models/postsModel')
 const { Users } = require('../../models/userModel')
 const asyncHandler = require('express-async-handler')
+const fs = require('fs');
+const path = require('path');
 
 const deleteRepost = asyncHandler(async (req, res) => {
     const { authorID, postID } = req.query
@@ -15,9 +17,6 @@ const deleteRepost = asyncHandler(async (req, res) => {
 
                 await Promise.all([
                     Reposts.findByIdAndDelete(repostExists._id),
-                    Replies.deleteMany({ parentID: repostExists._id }),
-                    Reposts.deleteMany({ parentID: repostExists._id }),
-                    Likes.deleteMany({ parentID: repostExists._id }),
                 ]);
 
                 switch (repostExists.parentType) {
@@ -45,7 +44,7 @@ const deleteRepost = asyncHandler(async (req, res) => {
 
                 res.status(202).json({
                     postID: repostExists._id,
-                    parentID: repostExists.parentID
+                    parentPostID: repostExists.parentPostID
                 });
             } else {
                 res.status(401).json({ message: "Unauthorized request" })

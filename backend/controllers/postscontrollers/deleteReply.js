@@ -1,6 +1,8 @@
 const { Posts, Replies, Reposts, Likes } = require('../../models/postsModel')
 const { Users } = require('../../models/userModel')
 const asyncHandler = require('express-async-handler')
+const cloudinary = require('../../utils/cloudinary')
+
 
 const deleteReply = asyncHandler(async (req, res) => {
     const { authorID, postID } = req.query
@@ -13,11 +15,12 @@ const deleteReply = asyncHandler(async (req, res) => {
         if (replyExists) {
             if (replyExists.authorID.toString() === authorID) {
 
+                replyExists.mediaURL.forEach(async (photoPath) => {
+                    await cloudinary.uploader.destroy(photoPath._id)
+                });
+
                 await Promise.all([
                     Replies.findByIdAndDelete(replyExists._id),
-                    Replies.deleteMany({ parentID: replyExists._id }),
-                    Reposts.deleteMany({ parentID: replyExists._id }),
-                    Likes.deleteMany({ parentID: replyExists._id }),
                 ]);
 
                 switch (replyExists.parentType) {
@@ -46,7 +49,7 @@ const deleteReply = asyncHandler(async (req, res) => {
 
                 res.status(202).json({
                     postID: replyExists._id,
-                    parentID: replyExists.parentID
+                    parentPostID: replyExists.parentPostID
                 });
             } else {
                 res.status(401).json({ message: "Unauthorized request" })

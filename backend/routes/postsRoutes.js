@@ -1,8 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
+
 //Auth Middleware
 const { protect } = require('../middleware/authMiddleware')
+const uploadMiddleware = require('../middleware/uploadMiddleware')
 
 
 // Create Controllers
@@ -10,6 +12,7 @@ const createNewPost = require('../controllers/PostsControllers/createNewPost')
 const createNewReply = require('../controllers/PostsControllers/createNewReply')
 const createNewRepost = require('../controllers/PostsControllers/createNewRepost')
 const createNewLike = require('../controllers/PostsControllers/createNewLike')
+const createNewPollResponse = require('../controllers/PostsControllers/createNewPollResponse')
 
 
 
@@ -39,10 +42,11 @@ const readAllLikesByUser = require('../controllers/PostsControllers/readAllLikes
 
 
 
-router.post('/new/post', protect, createNewPost)
-router.post('/new/reply', protect, createNewReply)
-router.post('/new/repost', protect, createNewRepost)
+router.post('/new/post', [protect, uploadMiddleware], createNewPost)
+router.post('/new/reply', [protect, uploadMiddleware], createNewReply)
+router.post('/new/repost', [protect, uploadMiddleware], createNewRepost)
 router.post('/new/like', protect, createNewLike)
+router.post('/new/poll/response', protect, createNewPollResponse)
 
 
 router.delete('/delete/post', protect, deletePost)

@@ -4,6 +4,9 @@ const asyncHandler = require('express-async-handler');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
+const basePath = process.env.BASE_PATH;
+
+
 const readAllLikesByUser = asyncHandler(async (req, res) => {
     const { userName } = req.params
     const { userID } = req.query
@@ -81,8 +84,7 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
                 type: "$posts.type",
                 authorID: "$posts.authorID",
                 postAuthorFirstName: "$author.userFirstName",
-                postAuthorMiddleName: "$author.userMiddleName",
-                postAuthorLastName: "$author.userLastName",
+                postAuthorMiddleName: "$author.userMiddleName", postAuthorLastName: "$author.userLastName",
                 postAuthorUserName: "$author.userName",
                 postAuthorAvatarURL: "$author.avatarURL",
                 likesCount: { $size: '$likes' },
@@ -363,6 +365,7 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
             }
         },
 
+
         {
             $lookup: {
                 from: "users",
@@ -371,7 +374,9 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
                 as: "parentAuthor"
             }
         },
-
+        {
+            $unwind: "$parentAuthor"
+        },
         {
             $lookup: {
                 from: "likes",
@@ -404,26 +409,26 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
                 parentType: "$likedReposts.parentType",
                 parentCaption: {
                     $cond: [
-                        { $eq: ['$parentType', 'post'] },
+                        { $eq: ['$likedReposts.parentType', 'post'] },
                         { $arrayElemAt: ['$parentPost.caption', 0] },
                         {
                             $cond: [
-                                { $eq: ['$parentType', 'reply'] },
+                                { $eq: ['$likedReposts.parentType', 'reply'] },
                                 { $arrayElemAt: ['$parentReply.caption', 0] },
-                                { $arrayElemAt: ['$parentRepost.caption', 0] }, // Typo corrected from 'parentRepost' to 'paentRepost'
+                                { $arrayElemAt: ['$parentRepost.caption', 0] },
                             ]
                         }
                     ]
                 },
                 parentMediaURL: {
                     $cond: [
-                        { $eq: ['$parentType', 'post'] },
+                        { $eq: ['$likedReposts.parentType', 'post'] },
                         { $arrayElemAt: ['$parentPost.mediaURL', 0] },
                         {
                             $cond: [
-                                { $eq: ['$parentType', 'reply'] },
+                                { $eq: ['$likedReposts.parentType', 'reply'] },
                                 { $arrayElemAt: ['$parentReply.mediaURL', 0] },
-                                { $arrayElemAt: ['$parentRepost.mediaURL', 0] }, // Typo corrected from 'parentRepost' to 'paentRepost'
+                                { $arrayElemAt: ['$parentRepost.mediaURL', 0] },
                             ]
                         }
                     ]

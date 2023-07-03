@@ -1,6 +1,10 @@
-const { Posts, Replies, Reposts, Likes } = require('../../models/postsModel')
+const { Posts, Replies, Reposts, Likes, Poll, PollOptions, PollRespondents } = require('../../models/postsModel')
 const { Users } = require('../../models/userModel')
 const asyncHandler = require('express-async-handler')
+const fs = require('fs');
+const path = require('path');
+
+const cloudinary = require('../../utils/cloudinary')
 
 const deletePost = asyncHandler(async (req, res) => {
     const { authorID, postID } = req.query
@@ -13,11 +17,15 @@ const deletePost = asyncHandler(async (req, res) => {
         if (postExists) {
             if (postExists.authorID.toString() === authorID) {
 
+
+                postExists.mediaURL.map(async (photoPath) => {
+                    await cloudinary.uploader.destroy(photoPath.id);
+                })
+
                 await Promise.all([
                     Posts.findByIdAndDelete(postExists._id),
-                    Replies.deleteMany({ parentID: postExists._id }),
-                    Reposts.deleteMany({ parentID: postExists._id }),
-                    Likes.deleteMany({ parentID: postExists._id }),
+                    PollOptions.deleteMany({ postID: postExists._id }),
+                    PollRespondents.deleteMany({ postID: postExists._id }),
                 ]);
 
                 res.status(202).json({ postID: postExists._id });

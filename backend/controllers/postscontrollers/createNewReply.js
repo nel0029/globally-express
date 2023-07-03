@@ -2,9 +2,12 @@ const { Users } = require('../../models/userModel')
 const { Posts, Replies, Reposts } = require('../../models/postsModel')
 const asyncHandler = require('express-async-handler')
 
+
+
 const createNewReply = asyncHandler(async (req, res) => {
 
-    const { authorID, postID, parentType, caption, mediaURL } = req.body
+    const { authorID, postID, parentType, caption, mediaURLs } = req.body
+
 
     const userExists = await Users.findById(authorID)
 
@@ -38,11 +41,13 @@ const createNewReply = asyncHandler(async (req, res) => {
                 parentUserName: parentUserName.userName,
                 type: "reply",
                 caption: caption,
-                mediaURL: mediaURL,
+                mediaURL: mediaURLs,
                 likesCount: 0,
                 repliesCount: 0,
                 repostsCount: 0,
             });
+
+
 
             await parentExists.updateOne({ $inc: { repliesCount: 1 } });
             const parentAuthor = await Users.findById(parentExists.authorID)
@@ -52,7 +57,7 @@ const createNewReply = asyncHandler(async (req, res) => {
                 authorID: newReply.authorID,
                 type: newReply.type,
                 caption: newReply.caption,
-                mediaURL: newReply.mediaURL,
+                mediaURL: mediaURLs,
                 likesCount: 0,
                 repliesCount: 0,
                 repostsCount: 0,

@@ -4,6 +4,8 @@ const asyncHandler = require('express-async-handler');
 const { MongoClient, ObjectId } = require('mongodb')
 
 
+const basePath = process.env.BASE_PATH;
+
 const readReplyDetails = asyncHandler(async (req, res) => {
     const { userName, postID } = req.params
     const { authorID } = req.query

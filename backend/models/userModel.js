@@ -23,7 +23,8 @@ const userSchema = new mongoose.Schema({
     },
 
     avatarURL: {
-        type: String
+        id: String,
+        url: String
     },
 
     email: {
@@ -39,7 +40,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    coverPhotoURL: String,
+    coverPhotoURL: {
+        id: String,
+        url: String
+    },
     bio: String,
 
 
@@ -80,11 +84,23 @@ followingSchema.pre('save', function (next) {
 });
 
 
+const activeUsersSchema = mongoose.Schema({
+    userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Userss"
+    },
+    socketID: {
+        type: String
+    }
+})
+
 const Users = mongoose.model('User', userSchema)
 const Following = mongoose.model('Following', followingSchema)
+const ActiveUsers = mongoose.model('ActiveUsers', activeUsersSchema)
 
 module.exports = {
     Users,
-    Following
+    Following,
+    ActiveUsers
 }
 

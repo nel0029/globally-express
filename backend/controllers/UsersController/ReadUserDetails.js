@@ -2,6 +2,8 @@ const asyncHandler = require('express-async-handler');
 const { Users, Following } = require('../../models/userModel');
 const { ObjectId } = require('mongodb');
 
+const basePath = process.env.BASE_PATH;
+
 const ReadUserDetails = asyncHandler(async (req, res) => {
     const { userName } = req.params //User that us being request to check
     const { authorID } = req.query // User who made the request
@@ -71,6 +73,7 @@ const ReadUserDetails = asyncHandler(async (req, res) => {
         ])
 
         const user = users[0]
+
         res.status(200).json(user)
 
     } else {

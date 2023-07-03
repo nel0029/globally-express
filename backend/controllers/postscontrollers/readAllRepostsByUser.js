@@ -4,6 +4,8 @@ const { Posts, Likes, Replies, Reposts } = require('../../models/postsModel');
 const { Users, Following } = require('../../models/userModel');
 const asyncHandler = require('express-async-handler');
 
+const basePath = process.env.BASE_PATH;
+
 const readAllRepostsByUser = asyncHandler(async (req, res) => {
     const { userName } = req.params
     const { authorID } = req.query

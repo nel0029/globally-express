@@ -13,7 +13,13 @@ const postsSchema = mongoose.Schema({
     type: String,
     privacy: String,
     caption: String,
-    mediaURL: [String],
+    mediaURL: [{
+        id: String,
+        url: String
+    }],
+    hasPoll: {
+        type: Boolean,
+    },
     likesCount: Number,
     repliesCount: Number,
     repostsCount: Number,
@@ -46,7 +52,10 @@ const repliesSchema = mongoose.Schema({
     parentType: String,
     privacy: String,
     caption: String,
-    mediaURL: [String],
+    mediaURL: [{
+        id: String,
+        url: String
+    }],
     likesCount: Number,
     repliesCount: Number,
     repostsCount: Number,
@@ -78,7 +87,10 @@ const repostsSchema = mongoose.Schema({
     parentType: String,
     privacy: String,
     caption: String,
-    mediaURL: [String],
+    mediaURL: [{
+        id: String,
+        url: String
+    }],
     likesCount: Number,
     repliesCount: Number,
     repostsCount: Number,
@@ -103,6 +115,10 @@ const likesSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users"
     },
+    parentAuthorID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
     type: String,
     parentPostID: ObjectId,
     parentType: String,
@@ -123,14 +139,44 @@ likesSchema.pre('save', function (next) {
     next();
 });
 
+
+const pollOptionsSchema = mongoose.Schema({
+    postID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts"
+    },
+    body: String
+})
+
+const pollRespondentsSchema = mongoose.Schema({
+    postID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Posts"
+    },
+    respondentID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    },
+    optionID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PollOptions"
+    }
+})
+
+
 const Posts = mongoose.model('Posts', postsSchema)
 const Replies = mongoose.model('Replies', repliesSchema)
 const Reposts = mongoose.model('Reposts', repostsSchema)
 const Likes = mongoose.model('Likes', likesSchema)
+const PollOptions = mongoose.model('PollOptions', pollOptionsSchema)
+const PollRespondents = mongoose.model('PollRespondents', pollRespondentsSchema)
+
 
 module.exports = {
     Posts,
     Replies,
     Reposts,
-    Likes
+    Likes,
+    PollOptions,
+    PollRespondents
 }

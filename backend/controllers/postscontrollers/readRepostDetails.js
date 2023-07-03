@@ -3,6 +3,9 @@ const { Users, Following } = require('../../models/userModel');
 const asyncHandler = require('express-async-handler');
 const { MongoClient, ObjectId } = require('mongodb')
 
+
+const basePath = process.env.BASE_PATH;
+
 const readRepostDetails = asyncHandler(async (req, res) => {
     const { userName, postID } = req.params
     const { authorID } = req.query

@@ -30,7 +30,7 @@ const updateReply = asyncHandler(async (req, res) => {
         }
 
     } else {
-        console.log("error")
+
         res.status(404).json({ message: "User not found" })
     }
 })
