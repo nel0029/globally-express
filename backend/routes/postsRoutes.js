@@ -8,37 +8,38 @@ const uploadMiddleware = require('../middleware/uploadMiddleware')
 
 
 // Create Controllers
-const createNewPost = require('../controllers/PostsControllers/createNewPost')
-const createNewReply = require('../controllers/PostsControllers/createNewReply')
-const createNewRepost = require('../controllers/PostsControllers/createNewRepost')
-const createNewLike = require('../controllers/PostsControllers/createNewLike')
-const createNewPollResponse = require('../controllers/PostsControllers/createNewPollResponse')
+const createNewPost = require('../controllers/postsControllers/createNewPost')
+const createNewReply = require('../controllers/postsControllers/createNewReply')
+const createNewRepost = require('../controllers/postsControllers/createNewRepost')
+const createNewLike = require('../controllers/postsControllers/createNewLike')
+const createNewPollResponse = require('../controllers/postsControllers/createNewPollResponse')
 
 
 
 //Delete Controllers
-const deletePost = require('../controllers/PostsControllers/deletePost')
-const deleteReply = require('../controllers/PostsControllers/deleteReply')
-const deleteRepost = require('../controllers/PostsControllers/deleteRepost')
-const deleteLike = require('../controllers/PostsControllers/deleteLike')
+const deletePost = require('../controllers/postsControllers/deletePost')
+const deleteReply = require('../controllers/postsControllers/deleteReply')
+const deleteRepost = require('../controllers/postsControllers/deleteRepost')
+const deleteLike = require('../controllers/postsControllers/deleteLike')
 
 
 //Update Controllers
-const updatePost = require('../controllers/PostsControllers/updatePost')
-const updateReply = require('../controllers/PostsControllers/updateReply')
-const updateRepost = require('../controllers/PostsControllers/updateRepost')
+const updatePost = require('../controllers/postsControllers/updatePost')
+const updateReply = require('../controllers/postsControllers/updateReply')
+const updateRepost = require('../controllers/postsControllers/updateRepost')
+
 
 
 //Read All post Controller
-const readAllPostData = require('../controllers/PostsControllers/readAllPostData')
-const readPostDetails = require('../controllers/PostsControllers/readPostDetails')
-const readAllRepliesByPostID = require('../controllers/PostsControllers/readAllRepliesByPostID')
-const readReplyDetails = require('../controllers/PostsControllers/readReplyDetails')
-const readRepostDetails = require('../controllers/PostsControllers/readRepostDetails')
-const readAllPostsByUser = require('../controllers/PostsControllers/readAllPostsByUser')
-const readAllRepliesByUser = require('../controllers/PostsControllers/readAllRepliesByUser')
-const readAllRepostsByUser = require('../controllers/PostsControllers/readAllRepostsByUser')
-const readAllLikesByUser = require('../controllers/PostsControllers/readAllLikesByUser')
+const readAllPostData = require('../controllers/postsControllers/readAllPostData')
+const readPostDetails = require('../controllers/postsControllers/readPostDetails')
+const readAllRepliesByPostID = require('../controllers/postsControllers/readAllRepliesByPostID')
+const readReplyDetails = require('../controllers/postsControllers/readReplyDetails')
+const readRepostDetails = require('../controllers/postsControllers/readRepostDetails')
+const readAllPostsByUser = require('../controllers/postsControllers/readAllPostsByUser')
+const readAllRepliesByUser = require('../controllers/postsControllers/readAllRepliesByUser')
+const readAllRepostsByUser = require('../controllers/postsControllers/readAllRepostsByUser')
+const readAllLikesByUser = require('../controllers/postsControllers/readAllLikesByUser')
 
 
 
