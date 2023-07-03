@@ -4,8 +4,8 @@
   "description": "ECommerce App",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "server": "nodemon backend/server.js"
+    "start": "node backend/index.js",
+    "server": "nodemon backend/index.js"
   },
   "author": "Jaynel Lucañas",
   "license": "ISC",
