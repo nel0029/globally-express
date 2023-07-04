@@ -9,15 +9,15 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     if (!userFirstName || !userLastName || !userName || !email || !password) {
-        res.status(400)
-        throw new Error('Please add all fields')
+        res.status(400).json({ message: "Please add all fields" })
+
     }
     //Check user existence in database
     const userExists = await Users.findOne({ email })
 
     if (userExists) {
-        res.status(400)
-        throw new Error('Email is already used by other user')
+        res.status(400).json({ message: "This user already exist" })
+
     }
 
     // Hashing the password
@@ -65,8 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
             targetID: user._id
         })
     } else {
-        res.status(400)
-        throw new Error('Invalid User Data')
+        res.status(400).json({ message: "Invalid User Data" })
     }
 })
 
