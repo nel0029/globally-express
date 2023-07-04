@@ -179,6 +179,7 @@ const readAllPostsByUser = asyncHandler(async (req, res) => {
                     likeID: 1,
                     isFollowedAuthor: 1,
                     followedID: 1,
+                    hasPoll: 1,
                     pollRespondentsCount: { $size: "$pollRespondents" },
                     hasChoosed: { $in: [new ObjectId(authorID), '$pollRespondents.respondentID'] },
                     optionChoosedID: {
