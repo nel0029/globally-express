@@ -6,7 +6,7 @@ const uploadMiddleware = (req, res, next) => {
     upload.any()(req, res, (err) => {
         if (err) {
             // Handle Multer error
-            return res.status(500).json({ error: 'Failed to upload file' });
+            return res.status(500).json({ error: 'Failed to upload file' }, "Error: ", err);
         }
 
         // If files uploaded successfully, upload each file to Cloudinary
