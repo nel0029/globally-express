@@ -7,7 +7,7 @@ const asyncHandler = require("express-async-handler");
 const createNewPost = asyncHandler(async (req, res) => {
   const { authorID, caption, hasPoll, pollOptions, mediaURLs, bgColor } =
     req.body;
-  console.log(req.body);
+
   const userExists = await Users.findById(authorID);
 
   if (userExists) {

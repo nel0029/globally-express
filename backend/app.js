@@ -77,7 +77,6 @@ io.on("connection", async (socket) => {
 
   socket.on("disconnect", async () => {
     await ActiveUsers.findOneAndRemove({ userID: userID });
-    console.log("User ID:", userID, "disconnected");
   });
 });
 

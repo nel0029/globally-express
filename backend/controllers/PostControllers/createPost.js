@@ -9,7 +9,6 @@ const createPost = asyncHandler(async (req, res) => {
   const { authorID, caption, hasPoll, pollOptions, mediaURLs } = req.body;
 
   const userExists = await Users.findById(authorID);
-  console.log("POST AUTHOR ID: ", caption);
 
   if (userExists) {
     const newPost = new Posts({
@@ -61,7 +60,7 @@ const createPost = asyncHandler(async (req, res) => {
         pollOptions: formattedPollOptions,
         pollRespondentsCount: 0,
       };
-      console.log(userExists.avatarURL);
+
       res.status(201).json(responseWithPoll);
     } else {
       const response = {
@@ -81,8 +80,7 @@ const createPost = asyncHandler(async (req, res) => {
         createdAt: savedPost.createdAt,
         hasPoll: savedPost.hasPoll,
       };
-      console.log(userExists.avatarURL);
-      console.log(userExists);
+
       res.status(201).json(response);
     }
   } else {

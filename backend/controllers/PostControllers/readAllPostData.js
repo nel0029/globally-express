@@ -10,7 +10,6 @@ const combinePublicData = asyncHandler(async (req, res) => {
   const authorID = req.query.authorID; // Assuming you have the current user ID stored in req.authorID
 
   if (authorID) {
-    console.log(authorID);
     const posts = await Posts.aggregate([
       {
         $lookup: {
