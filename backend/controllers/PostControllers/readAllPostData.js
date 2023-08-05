@@ -480,6 +480,7 @@ const combinePublicData = asyncHandler(async (req, res) => {
           likesCount: { $size: "$likes" },
           repliesCount: { $size: "$replies" },
           repostsCount: { $size: "$reposts" },
+          parentBGColor: { $arrayElemAt: ["$parentPost.bgColor", 0] },
           isLiked: {
             $cond: [
               { $in: [new ObjectId(authorID), "$likes.authorID"] },
@@ -559,6 +560,7 @@ const combinePublicData = asyncHandler(async (req, res) => {
           likesCount: 1,
           repliesCount: 1,
           repostsCount: 1,
+          parentBGColor: 1,
           isLiked: 1,
           likeID: 1,
           isFollowedAuthor: 1,
