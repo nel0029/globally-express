@@ -14,12 +14,13 @@ const deleteReply = async (data, socket, io) => {
 
   if (replyExists) {
     const deletedNotification = await Notifications.findOneAndDelete({
-      $and: [{ actionID: replyExists._id }, { actorID: actorID }],
+      actionID: replyExists._id,
+      actorID: actorID,
     });
 
     if (deletedNotification) {
       const unseenNotifications = await UnseenNotifications.findOne({
-        targetID: deletedNotification.targetID,
+        targetID: targetID,
       });
 
       if (unseenNotifications) {

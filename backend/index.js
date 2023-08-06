@@ -50,6 +50,7 @@ const notificationHandler = require("./socket-io/notifications/notification");
 io.on("connection", async (socket) => {
   const { userID } = socket.handshake.query;
   const socketID = socket.id;
+
   messageHandler(io, socket);
   notificationHandler(io, socket);
 

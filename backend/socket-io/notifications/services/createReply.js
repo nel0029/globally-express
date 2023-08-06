@@ -12,7 +12,7 @@ const createReply = async (data, socket, io) => {
 
   const replyExists = await Replies.findById(actionID);
 
-  if (replyExists && likeExists.parentAuthorID.toString() !== actorID) {
+  if (replyExists && replyExists.parentAuthorID.toString() !== actorID) {
     const newNotification = await Notifications.create({
       actionType: actionType,
       postID: postID,

@@ -12,7 +12,7 @@ const createRepost = async (data, socket, io) => {
 
   const repostExists = await Reposts.findById(actionID);
 
-  if (repostExists && likeExists.parentAuthorID.toString() !== actorID) {
+  if (repostExists && repostExists.parentAuthorID.toString() !== actorID) {
     const newNotification = await Notifications.create({
       actionType: actionType,
       postID: postID,
