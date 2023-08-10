@@ -1,106 +1,104 @@
-const mongoose = require('mongoose')
-const moment = require('moment-timezone');
-const { ObjectId } = require('mongodb');
+/** @format */
 
+const mongoose = require("mongoose");
+const moment = require("moment-timezone");
+const { ObjectId } = require("mongodb");
 
-
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     userFirstName: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     userMiddleName: {
-        type: String,
+      type: String,
     },
     userLastName: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
 
     userName: {
-        type: String,
-        unique: true
+      type: String,
+      unique: true,
     },
 
     avatarURL: {
-        id: String,
-        url: String
+      id: String,
+      url: String,
     },
 
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     private: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     coverPhotoURL: {
-        id: String,
-        url: String
+      id: String,
+      url: String,
     },
     bio: String,
 
-
     createdAt: {
-        type: Date,
-        default: Date.now
-    }
-},
-    {
-        timestamps: true
-    })
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-userSchema.pre('save', function (next) {
-    // Convert createdAt to "Asia/Manila" timezone
-    this.createdAt = moment(this.createdAt).tz('Asia/Manila');
-    next();
+userSchema.pre("save", function (next) {
+  // Convert createdAt to "Asia/Manila" timezone
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
 });
 
-
-
-const followingSchema = new mongoose.Schema({
+const followingSchema = new mongoose.Schema(
+  {
     followingID: ObjectId,
     followerID: ObjectId,
     createdAt: {
-        type: Date,
-        default: Date.now
-    }
-},
-    {
-        timestamps: true
-    }
-)
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-followingSchema.pre('save', function (next) {
-    // Convert createdAt to "Asia/Manila" timezone
-    this.createdAt = moment(this.createdAt).tz('Asia/Manila');
-    next();
+followingSchema.pre("save", function (next) {
+  // Convert createdAt to "Asia/Manila" timezone
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
 });
 
-
 const activeUsersSchema = mongoose.Schema({
-    userID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Userss"
-    },
-    socketID: {
-        type: String
-    }
-})
+  userID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Userss",
+  },
+  socketID: {
+    type: String,
+  },
+});
 
-const Users = mongoose.model('User', userSchema)
-const Following = mongoose.model('Following', followingSchema)
-const ActiveUsers = mongoose.model('ActiveUsers', activeUsersSchema)
+const Users = mongoose.model("User", userSchema);
+const Following = mongoose.model("Following", followingSchema);
+const ActiveUsers = mongoose.model("ActiveUsers", activeUsersSchema);
 
 module.exports = {
-    Users,
-    Following,
-    ActiveUsers
-}
-
+  Users,
+  Following,
+  ActiveUsers,
+};

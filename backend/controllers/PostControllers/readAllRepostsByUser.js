@@ -95,6 +95,31 @@ const readAllRepostsByUser = asyncHandler(async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "polloptions",
+          localField: "parentPostID",
+          foreignField: "postID",
+          as: "pollOptions",
+        },
+      },
+      {
+        $lookup: {
+          from: "pollrespondents",
+          localField: "parentPostID",
+          foreignField: "postID",
+          as: "pollRespondents",
+        },
+      },
+
+      {
+        $lookup: {
+          from: "pollrespondents",
+          localField: "parentPostID",
+          foreignField: "postID",
+          as: "optionRespondents",
+        },
+      },
+      {
         $addFields: {
           postAuthorFirstName: { $arrayElemAt: ["$author.userFirstName", 0] },
           postAuthorMiddleName: { $arrayElemAt: ["$author.userMiddleName", 0] },
@@ -192,6 +217,48 @@ const readAllRepostsByUser = asyncHandler(async (req, res) => {
               null,
             ],
           },
+
+          parentHasPoll: { $arrayElemAt: ["$parentPost.hasPoll", 0] },
+          parentPollRespondentsCount: { $size: "$pollRespondents" },
+          hasChoosed: {
+            $in: [new ObjectId(authorID), "$pollRespondents.respondentID"],
+          },
+          optionChoosedID: {
+            $let: {
+              vars: {
+                filteredOptions: {
+                  $filter: {
+                    input: "$pollRespondents",
+                    cond: {
+                      $eq: ["$$this.respondentID", new ObjectId(authorID)],
+                    },
+                  },
+                },
+              },
+              in: { $arrayElemAt: ["$$filteredOptions.optionID", 0] },
+            },
+          },
+          parentPollOptions: {
+            $map: {
+              input: "$pollOptions",
+              as: "option",
+              in: {
+                $mergeObjects: [
+                  "$$option",
+                  {
+                    count: {
+                      $size: {
+                        $filter: {
+                          input: "$optionRespondents",
+                          cond: { $eq: ["$$this.optionID", "$$option._id"] },
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
         },
       },
       {
@@ -226,6 +293,13 @@ const readAllRepostsByUser = asyncHandler(async (req, res) => {
           likeID: 1,
           isFollowedAuthor: 1,
           followedID: 1,
+
+          hasChoosed: 1,
+          parentHasPoll: 1,
+          parentPollOptions: 1,
+          parentPollRespondentsCount: 1,
+          optionChoosedID: 1,
+
           // Include other necessary fields extracted from other collections
         },
       },
