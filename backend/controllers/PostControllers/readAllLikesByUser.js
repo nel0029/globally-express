@@ -79,6 +79,7 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
     },
     {
       $project: {
+        userName: userName,
         _id: "$posts._id",
         caption: "$posts.caption",
         mediaURL: "$posts.mediaURL",
@@ -220,6 +221,7 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
     },
     {
       $project: {
+        userName: userName,
         _id: "$likedReplies._id",
         caption: "$likedReplies.caption",
         mediaURL: "$likedReplies.mediaURL",
@@ -393,6 +395,7 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
     },
     {
       $project: {
+        userName: userName,
         _id: "$likedReposts._id",
         caption: "$likedReposts.caption",
         mediaURL: "$likedReposts.mediaURL",
