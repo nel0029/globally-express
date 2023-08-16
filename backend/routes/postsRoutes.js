@@ -38,8 +38,8 @@ const readAllRepliesByUser = require("../controllers/PostControllers/readAllRepl
 const readAllRepostsByUser = require("../controllers/PostControllers/readAllRepostsByUser");
 const readAllLikesByUser = require("../controllers/PostControllers/readAllLikesByUser");
 
-router.post("/new/post", protect, createNewPost);
-router.post("/new/reply", protect, createNewReply);
+router.post("/new/post", [protect, uploadMiddleware], createNewPost);
+router.post("/new/reply", [protect, uploadMiddleware], createNewReply);
 router.post("/new/repost", protect, createNewRepost);
 router.post("/new/like", protect, createNewLike);
 router.post("/new/poll/response", protect, createNewPollResponse);

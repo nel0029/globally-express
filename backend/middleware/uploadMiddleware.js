@@ -5,56 +5,45 @@ const upload = require("./upload");
 const fs = require("fs");
 
 const uploadMiddleware = (req, res, next) => {
-  upload.any()(req, res, (err) => {
+  upload.single("file")(req, res, (err) => {
     if (err) {
-      console.log(err);
+      console.log("ERROR", err);
       return res
         .status(500)
         .json({ error: "Failed to upload file" }, "Error: ", err);
     }
 
-    // If files uploaded successfully, upload each file to Cloudinary
-    if (req.files && req.files.length > 0) {
-      const files = req.files;
-      const mediaURLs = []; // Array to store the file URLs
+    // If file uploaded successfully, upload the file to Cloudinary
+    if (req.file) {
+      const file = req.file;
 
-      // Process each file and upload to Cloudinary
-      const uploadPromises = files.map((file) => {
-        return new Promise((resolve, reject) => {
-          // Upload file to Cloudinary
-          cloudinary.uploader.upload(file.path, (error, result) => {
-            if (error) {
-              // Handle Cloudinary upload error
-              reject("Failed to upload file to Cloudinary");
-            }
+      // Upload file to Cloudinary
+      cloudinary.uploader.upload(file.path, (error, result) => {
+        if (error) {
+          return res
+            .status(500)
+            .json({ error: "Failed to upload file to Cloudinary" });
+        }
 
-            const img = {
-              url: result.secure_url,
-              id: result.public_id,
-            };
-            // Store the Cloudinary URL in the mediaURLs array
-            mediaURLs.push(img);
+        // Create an object with Cloudinary URL and public_id
+        const mediaURL = {
+          url: result.secure_url,
+          id: result.public_id,
+        };
 
-            // Remove the temporary file
-            fs.unlinkSync(file.path);
+        // Remove the temporary file
+        fs.unlinkSync(file.path);
 
-            resolve();
-          });
-        });
+        // Check if mediaURLs array exists in req.body, and initialize it if not
+        if (!req.body.mediaURLs) {
+          req.body.mediaURLs = [];
+        }
+
+        // Push the Cloudinary URL to the mediaURLs array
+        req.body.mediaURLs.push(mediaURL);
+
+        next();
       });
-
-      // Wait for all uploads to complete
-      Promise.all(uploadPromises)
-        .then(() => {
-          // Store the file URLs in req.body or req.file for further processing
-          req.body.mediaURLs = mediaURLs;
-
-          next();
-        })
-        .catch((error) => {
-          // Handle any upload errors
-          res.status(500).json({ error });
-        });
     } else {
       next();
     }

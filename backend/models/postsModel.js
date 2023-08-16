@@ -26,6 +26,7 @@ const postsSchema = mongoose.Schema(
     bgColor: {
       type: String,
     },
+
     likesCount: Number,
     repliesCount: Number,
     repostsCount: Number,
@@ -63,6 +64,7 @@ const repliesSchema = mongoose.Schema(
         url: String,
       },
     ],
+
     likesCount: Number,
     repliesCount: Number,
     repostsCount: Number,
@@ -100,6 +102,7 @@ const repostsSchema = mongoose.Schema(
         url: String,
       },
     ],
+
     likesCount: Number,
     repliesCount: Number,
     repostsCount: Number,
@@ -172,6 +175,33 @@ const pollRespondentsSchema = mongoose.Schema({
   },
 });
 
+const hashtagsSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    postID: {
+      type: ObjectId,
+    },
+    postType: {
+      type: String,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+hashtagsSchema.pre("save", function (next) {
+  // Convert createdAt to "Asia/Manila" timezone
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
+});
+
 const Posts = mongoose.model("Posts", postsSchema);
 const Replies = mongoose.model("Replies", repliesSchema);
 const Reposts = mongoose.model("Reposts", repostsSchema);
@@ -181,6 +211,7 @@ const PollRespondents = mongoose.model(
   "PollRespondents",
   pollRespondentsSchema
 );
+const Hashtags = mongoose.model("Hashtags", hashtagsSchema);
 
 module.exports = {
   Posts,
@@ -189,4 +220,5 @@ module.exports = {
   Likes,
   PollOptions,
   PollRespondents,
+  Hashtags,
 };
