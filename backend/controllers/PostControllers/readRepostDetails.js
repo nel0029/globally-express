@@ -122,6 +122,7 @@ const readRepostDetails = asyncHandler(async (req, res) => {
         postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
         postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
         postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
+        verified: { $arrayElemAt: ["$author.avatarURL", 0] },
         parentUserName: { $arrayElemAt: ["$parentAuthor.userName", 0] },
         parentAuthorFirstName: {
           $arrayElemAt: ["$parentAuthor.userFirstName", 0],
@@ -133,6 +134,7 @@ const readRepostDetails = asyncHandler(async (req, res) => {
           $arrayElemAt: ["$parentAuthor.userLastName", 0],
         },
         parentAvatarURL: { $arrayElemAt: ["$parentAuthor.avatarURL", 0] },
+        parentAuthorVerified: { $arrayElemAt: ["$parentAuthor.avatarURL", 0] },
         parentCaption: {
           $cond: [
             { $eq: ["$parentType", "post"] },
@@ -271,7 +273,8 @@ const readRepostDetails = asyncHandler(async (req, res) => {
         postAuthorLastName: 1,
         postAuthorUserName: 1,
         postAuthorAvatarURL: 1,
-
+        verified: 1,
+        parentAuthorVerified: 1,
         //Parent Post
         parentPostID: 1,
         parentUserName: 1,

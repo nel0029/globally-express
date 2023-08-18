@@ -84,6 +84,7 @@ const combinePublicData = asyncHandler(async (req, res) => {
           postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
           postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
           postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
+          verified: { $arrayElemAt: ["$author.verified", 0] },
           likesCount: { $size: "$likes" },
           repliesCount: { $size: "$replies" },
           repostsCount: { $size: "$reposts" },
@@ -191,6 +192,7 @@ const combinePublicData = asyncHandler(async (req, res) => {
           type: 1,
           createdAt: 1,
           authorID: 1,
+          verified: 1,
           // Include other necessary fields from the posts collection
           postAuthorFirstName: 1,
           postAuthorMiddleName: 1,
@@ -271,6 +273,7 @@ const combinePublicData = asyncHandler(async (req, res) => {
           postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
           postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
           postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
+          verified: { $arrayElemAt: ["$author.verified", 0] },
           parentUserName: { $arrayElemAt: ["$parentAuthor.userName", 0] },
           parentAvatarURL: { $arrayElemAt: ["$parentAuthor.avatarURL", 0] },
           likesCount: { $size: "$likes" },
@@ -336,6 +339,7 @@ const combinePublicData = asyncHandler(async (req, res) => {
           type: 1,
           createdAt: 1,
           authorID: 1,
+          verified: 1,
           // Include other necessary fields from the posts collection
           postAuthorFirstName: 1,
           postAuthorMiddleName: 1,
@@ -464,6 +468,8 @@ const combinePublicData = asyncHandler(async (req, res) => {
           postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
           postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
           postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
+          verified: { $arrayElemAt: ["$author.verified", 0] },
+          parentAuthorVerified: { $arrayElemAt: ["$parentAuthor.verified", 0] },
           parentUserName: { $arrayElemAt: ["$parentAuthor.userName", 0] },
           parentAuthorFirstName: {
             $arrayElemAt: ["$parentAuthor.userFirstName", 0],
@@ -607,6 +613,8 @@ const combinePublicData = asyncHandler(async (req, res) => {
           createdAt: 1,
           authorID: 1,
           parentType: 1,
+          verified: 1,
+          parentAuthorVerified: 1,
           // Include other necessary fields from the posts collection
           postAuthorFirstName: 1,
           postAuthorMiddleName: 1,

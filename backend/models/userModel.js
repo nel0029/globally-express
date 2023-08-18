@@ -46,6 +46,9 @@ const userSchema = new mongoose.Schema(
       url: String,
     },
     bio: String,
+    verified: {
+      type: Boolean,
+    },
 
     createdAt: {
       type: Date,

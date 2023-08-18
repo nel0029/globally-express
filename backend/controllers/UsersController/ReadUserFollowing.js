@@ -65,6 +65,7 @@ const ReadUserFollowing = asyncHandler(async (req, res) => {
           userMiddleName: "$users.userMiddleName",
           userLastName: "$users.userLastName",
           avatarURL: "$users.avatarURL",
+          verified: "$users.verified",
           coverPhotoURL: "$users.coverPhotoURL",
           bio: "$users.bio",
           followersCount: { $size: "$followers" },

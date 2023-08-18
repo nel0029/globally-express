@@ -101,6 +101,7 @@ const readAllPostsByUser = asyncHandler(async (req, res) => {
           postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
           postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
           postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
+          verified: { $arrayElemAt: ["$author.verified", 0] },
           parentUserName: { $arrayElemAt: ["$parentAuthor.userName", 0] },
           parentAvatarURL: { $arrayElemAt: ["$parentAuthor.avatarURL", 0] },
           likesCount: { $size: "$likes" },
@@ -172,6 +173,7 @@ const readAllPostsByUser = asyncHandler(async (req, res) => {
           postAuthorLastName: 1,
           postAuthorUserName: 1,
           postAuthorAvatarURL: 1,
+          verified: 1,
           parentAvatarURL: 1,
           parentUserName: 1,
           parentPostID: 1,
@@ -231,11 +233,9 @@ const readAllPostsByUser = asyncHandler(async (req, res) => {
 
     res.status(200).json(posts);
   } else {
-    res
-      .status(404)
-      .json({
-        message: `This user who has a userName: ${userName} did not exists`,
-      });
+    res.status(404).json({
+      message: `This user who has a userName: ${userName} did not exists`,
+    });
   }
 });
 

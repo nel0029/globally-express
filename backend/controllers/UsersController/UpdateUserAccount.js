@@ -25,43 +25,41 @@ const UpdateUserAccount = asyncHandler(async (req, res) => {
   const userExist = await Users.findById(userID);
 
   if (userExist) {
-    if (await bcrypt.compare(currentPassword, userExist.password)) {
-      let previousAvatarURL = userExist.avatarURL;
-      let previousCoverPhotoURL = userExist.coverPhotoURL;
+    let previousAvatarURL = userExist.avatarURL;
+    let previousCoverPhotoURL = userExist.coverPhotoURL;
 
-      if (previousAvatarURL) {
-        if (previousAvatarURL.id !== "qmf9eubrzyyvewjsmbjq") {
-          await cloudinary.uploader.destroy(userExist.avatarURL.id);
-        }
+    if (previousAvatarURL) {
+      if (previousAvatarURL.id !== "qmf9eubrzyyvewjsmbjq") {
+        await cloudinary.uploader.destroy(userExist.avatarURL.id);
       }
+    }
 
-      if (previousCoverPhotoURL) {
-        if (previousCoverPhotoURL.id !== "xfcxo6hhigcb0z8zoqok") {
-          await cloudinary.uploader.destroy(userExist.coverPhotoURL.id);
-        }
+    if (previousCoverPhotoURL) {
+      if (previousCoverPhotoURL.id !== "xfcxo6hhigcb0z8zoqok") {
+        await cloudinary.uploader.destroy(userExist.coverPhotoURL.id);
       }
+    }
 
-      avatar && (userExist.avatarURL = avatar);
-      coverPhoto && (userExist.coverPhotoURL = coverPhoto);
-      userName && (userExist.userName = userName);
-      email && (userExist.email = email);
-      userFirstName && (userExist.userFirstName = userFirstName);
-      userMiddleName && (userExist.userMiddleName = userMiddleName);
-      userLastName && (userExist.userLastName = userLastName);
-      bio && (userExist.bio = bio);
+    avatar && (userExist.avatarURL = avatar);
+    coverPhoto && (userExist.coverPhotoURL = coverPhoto);
+    userName && (userExist.userName = userName);
+    email && (userExist.email = email);
+    userFirstName && (userExist.userFirstName = userFirstName);
+    userMiddleName && (userExist.userMiddleName = userMiddleName);
+    userLastName && (userExist.userLastName = userLastName);
+    bio && (userExist.bio = bio);
 
-      if (newPassword) {
+    if (newPassword) {
+      if (await bcrypt.compare(currentPassword, userExist.password)) {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
         userExist.password = hashedPassword;
       }
-
-      await userExist.save();
-
-      res.status(200).json(userExist);
-    } else {
-      res.status(400).json({ message: "Incorrect Password" });
     }
+
+    await userExist.save();
+
+    res.status(200).json(userExist);
   }
 });
 
