@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const path = require("path");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv").config();
+const cookieParser = require("cookie-parser");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
 const cors = require("cors");
@@ -20,17 +21,20 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: clientAddress,
+    credentials: true,
   },
 });
 
 app.use(
   cors({
     origin: clientAddress,
+    credentials: true,
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 app.use(errorHandler);
 

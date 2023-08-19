@@ -13,6 +13,7 @@ const logInUser = asyncHandler(async (req, res) => {
   });
 
   if (user && (await bcrypt.compare(password, user.password))) {
+    generateToken(res, user._id);
     res.status(200).json({
       userID: user._id,
       userName: user.userName,
@@ -21,7 +22,6 @@ const logInUser = asyncHandler(async (req, res) => {
       userMiddleName: user.userMiddleName,
       userLastName: user.userLastName,
       coverPhotoURL: user.coverPhotoURL,
-      token: generateToken(user._id),
     });
   } else {
     res.status(400).json({
