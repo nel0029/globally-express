@@ -17,11 +17,7 @@ const logInUser = asyncHandler(async (req, res) => {
     res.status(200).json({
       userID: user._id,
       userName: user.userName,
-      avatarURL: user.avatarURL,
-      userFirstName: user.userFirstName,
-      userMiddleName: user.userMiddleName,
-      userLastName: user.userLastName,
-      coverPhotoURL: user.coverPhotoURL,
+      isLogIn: true,
     });
   } else {
     res.status(400).json({

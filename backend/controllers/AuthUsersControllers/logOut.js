@@ -8,7 +8,7 @@ const logOut = asyncHandler(async (req, res) => {
     expires: new Date(0),
   });
 
-  res.status(200).json({ isLogOut: true });
+  res.status(200).json({ isLogIn: false });
 });
 
 module.exports = { logOut };
