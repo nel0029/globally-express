@@ -64,7 +64,7 @@ const readReplyDetails = asyncHandler(async (req, res) => {
         postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
         postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
         postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
-        verified: { $arrayElemAt: ["$author.avatarURL", 0] },
+        verified: { $arrayElemAt: ["$author.verified", 0] },
         likesCount: { $size: "$likes" },
         repliesCount: { $size: "$replies" },
         repostsCount: { $size: "$reposts" },

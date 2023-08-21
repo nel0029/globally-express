@@ -164,13 +164,15 @@ const readAllRepliesByUser = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json(replies);
+    const response = {
+      userName: userName,
+      posts: replies,
+    };
+    res.status(200).json(response);
   } else {
-    res
-      .status(404)
-      .json({
-        message: `This user who has a userName: ${userName} did not exists`,
-      });
+    res.status(404).json({
+      message: `This user who has a userName: ${userName} did not exists`,
+    });
   }
 });
 

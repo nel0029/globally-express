@@ -231,7 +231,11 @@ const readAllPostsByUser = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json(posts);
+    const response = {
+      userName: userName,
+      posts: posts,
+    };
+    res.status(200).json(response);
   } else {
     res.status(404).json({
       message: `This user who has a userName: ${userName} did not exists`,

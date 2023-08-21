@@ -503,7 +503,12 @@ const readAllLikesByUser = asyncHandler(async (req, res) => {
   const combinedData = [...likedPost, ...likedReplies, ...likedReposts];
   combinedData.sort((a, b) => a.createdAt - b.createdAt);
 
-  res.status(200).json(combinedData);
+  const response = {
+    userName: userName,
+    posts: combinedData,
+  };
+
+  res.status(200).json(response);
 });
 
 module.exports = readAllLikesByUser;

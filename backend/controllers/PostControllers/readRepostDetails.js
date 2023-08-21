@@ -122,7 +122,7 @@ const readRepostDetails = asyncHandler(async (req, res) => {
         postAuthorLastName: { $arrayElemAt: ["$author.userLastName", 0] },
         postAuthorUserName: { $arrayElemAt: ["$author.userName", 0] },
         postAuthorAvatarURL: { $arrayElemAt: ["$author.avatarURL", 0] },
-        verified: { $arrayElemAt: ["$author.avatarURL", 0] },
+        verified: { $arrayElemAt: ["$author.verified", 0] },
         parentUserName: { $arrayElemAt: ["$parentAuthor.userName", 0] },
         parentAuthorFirstName: {
           $arrayElemAt: ["$parentAuthor.userFirstName", 0],
@@ -134,7 +134,7 @@ const readRepostDetails = asyncHandler(async (req, res) => {
           $arrayElemAt: ["$parentAuthor.userLastName", 0],
         },
         parentAvatarURL: { $arrayElemAt: ["$parentAuthor.avatarURL", 0] },
-        parentAuthorVerified: { $arrayElemAt: ["$parentAuthor.avatarURL", 0] },
+        parentAuthorVerified: { $arrayElemAt: ["$parentAuthor.verified", 0] },
         parentCaption: {
           $cond: [
             { $eq: ["$parentType", "post"] },
@@ -143,7 +143,7 @@ const readRepostDetails = asyncHandler(async (req, res) => {
               $cond: [
                 { $eq: ["$parentType", "reply"] },
                 { $arrayElemAt: ["$parentReply.caption", 0] },
-                { $arrayElemAt: ["$parentRepost.caption", 0] }, // Typo corrected from 'parentRepost' to 'paentRepost'
+                { $arrayElemAt: ["$parentRepost.caption", 0] },
               ],
             },
           ],
@@ -156,7 +156,7 @@ const readRepostDetails = asyncHandler(async (req, res) => {
               $cond: [
                 { $eq: ["$parentType", "reply"] },
                 { $arrayElemAt: ["$parentReply.mediaURL", 0] },
-                { $arrayElemAt: ["$parentRepost.mediaURL", 0] }, // Typo corrected from 'parentRepost' to 'paentRepost'
+                { $arrayElemAt: ["$parentRepost.mediaURL", 0] },
               ],
             },
           ],
@@ -267,7 +267,6 @@ const readRepostDetails = asyncHandler(async (req, res) => {
         createdAt: 1,
         authorID: 1,
         parentType: 1,
-        // Include other necessary fields from the posts collection
         postAuthorFirstName: 1,
         postAuthorMiddleName: 1,
         postAuthorLastName: 1,

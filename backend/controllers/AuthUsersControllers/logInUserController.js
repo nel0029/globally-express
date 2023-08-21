@@ -17,6 +17,13 @@ const logInUser = asyncHandler(async (req, res) => {
     res.status(200).json({
       userID: user._id,
       userName: user.userName,
+      avatarURL: user.avatarURL.url,
+      coverPhotoURL: user.coverPhotoURL.url,
+      userFirstName: user.userFirstName,
+      userMiddleName: user.userMiddleName,
+      userLastName: user.userLastName,
+      bio: user.bio,
+      verified: user.verified,
       isLogIn: true,
     });
   } else {
