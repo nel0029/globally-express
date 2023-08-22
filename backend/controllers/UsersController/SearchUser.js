@@ -4,11 +4,16 @@ const asyncHandler = require("express-async-handler");
 const { Users } = require("../../models/userModel");
 
 const SearchUser = asyncHandler(async (req, res) => {
-  const { userName } = req.query;
+  const { userName, requesterUserName } = req.query;
 
   if (userName) {
-    const user = await Users.find(
-      { userName: { $regex: userName, $options: "i" } },
+    const users = await Users.find(
+      {
+        $and: [
+          { userName: { $regex: userName, $options: "i" } },
+          { userName: { $ne: requesterUserName } },
+        ],
+      },
       {
         _id: 1,
         userName: 1,
@@ -19,8 +24,7 @@ const SearchUser = asyncHandler(async (req, res) => {
         verified: 1,
       }
     );
-
-    res.status(200).json(user);
+    res.status(200).json(users);
   } else {
     res.status(200).json(null);
   }
