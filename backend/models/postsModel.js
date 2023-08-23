@@ -202,6 +202,30 @@ hashtagsSchema.pre("save", function (next) {
   next();
 });
 
+const searchedWords = mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    userID: {
+      type: ObjectId,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+searchedWords.pre("save", function (next) {
+  // Convert createdAt to "Asia/Manila" timezone
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
+});
+
 const Posts = mongoose.model("Posts", postsSchema);
 const Replies = mongoose.model("Replies", repliesSchema);
 const Reposts = mongoose.model("Reposts", repostsSchema);
@@ -212,6 +236,7 @@ const PollRespondents = mongoose.model(
   pollRespondentsSchema
 );
 const Hashtags = mongoose.model("Hashtags", hashtagsSchema);
+const SearchedWords = mongoose.model("SearchedWords", searchedWords);
 
 module.exports = {
   Posts,
@@ -221,4 +246,5 @@ module.exports = {
   PollOptions,
   PollRespondents,
   Hashtags,
+  SearchedWords,
 };

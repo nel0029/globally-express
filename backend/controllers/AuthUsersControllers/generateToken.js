@@ -11,8 +11,8 @@ const generateToken = (res, id) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: process.env.HTTP_ONLY_SECURE,
+    sameSite: process.env.HTTP_ONLY_SAME_SITE,
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 };

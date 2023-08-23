@@ -1,11 +1,16 @@
 /** @format */
 
 const asyncHandler = require("express-async-handler");
-const { Posts, Replies, Reposts } = require("../../models/postsModel");
+const {
+  Posts,
+  Replies,
+  Reposts,
+  SearchedWords,
+} = require("../../models/postsModel");
 const { Users } = require("../../models/userModel");
 const { ObjectId } = require("mongodb");
 
-const searchPostsByWord = asyncHandler(async (req, res) => {
+const searchWords = asyncHandler(async (req, res) => {
   const { query, userID } = req.query;
 
   const userExists = await Users.findById(userID);
@@ -241,6 +246,9 @@ const searchPostsByWord = asyncHandler(async (req, res) => {
           optionChoosedID: 1,
         },
       },
+      {
+        $limit: 3,
+      },
     ]);
 
     const matchedReplies = await Replies.aggregate([
@@ -390,6 +398,9 @@ const searchPostsByWord = asyncHandler(async (req, res) => {
           followID: 1,
           // Include other necessary fields extracted from other collections
         },
+      },
+      {
+        $limit: 3,
       },
     ]);
 
@@ -687,13 +698,93 @@ const searchPostsByWord = asyncHandler(async (req, res) => {
           // Include other necessary fields extracted from other collections
         },
       },
+      {
+        $limit: 3,
+      },
     ]);
 
-    const response = [...matchedPosts, ...matchedReplies, ...matchedReposts];
-    response.sort((a, b) => b.createdAt - a.createdAt);
+    const matchedUsers = await Users.aggregate([
+      {
+        $match: {
+          $or: [
+            { userName: { $in: queryWordsRegex } },
+            { userFirstName: { $in: queryWordsRegex } },
+            { userMiddleName: { $in: queryWordsRegex } },
+            { userLastName: { $in: queryWordsRegex } },
+            { bio: { $in: queryWordsRegex } },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "followings",
+          let: { userId: userID },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$followerID", "$$userId"] },
+                    { $eq: ["$followingID", "$_id"] },
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+              },
+            },
+          ],
+          as: "followInfo",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          userName: 1,
+          userFirstName: 1,
+          userMiddleName: 1,
+          userLastName: 1,
+          bio: 1,
+          avatarURL: 1,
+          verified: 1,
+          isFollowed: {
+            $cond: [{ $gt: [{ $size: "$followInfo" }, 0] }, true, false],
+          },
+          followID: {
+            $cond: [
+              { $gt: [{ $size: "$followInfo" }, 0] },
+              { $arrayElemAt: ["$followInfo._id", 0] },
+              null,
+            ],
+          },
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+
+    const allPosts = [...matchedPosts, ...matchedReplies, ...matchedReposts];
+    allPosts.sort((a, b) => b.createdAt - a.createdAt);
+
+    const response = {
+      matchedUsers: matchedUsers,
+      allPosts: allPosts,
+    };
 
     res.status(200).json(response);
+
+    const existingSearch = await SearchedWords.findOne({
+      name: query,
+      userID: userID,
+    });
+
+    if (!existingSearch) {
+      await SearchedWords.create({ name: query, userID: userID });
+    }
   }
 });
 
-module.exports = searchPostsByWord;
+module.exports = searchWords;
