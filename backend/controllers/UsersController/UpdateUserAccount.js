@@ -23,43 +23,50 @@ const UpdateUserAccount = asyncHandler(async (req, res) => {
   } = req.body;
 
   const userExist = await Users.findById(userID);
+  const emailExist = await Users.findOne({ email });
 
   if (userExist) {
-    let previousAvatarURL = userExist.avatarURL;
-    let previousCoverPhotoURL = userExist.coverPhotoURL;
+    if (!emailExist || email === userExist.email) {
+      let previousAvatarURL = userExist.avatarURL;
+      let previousCoverPhotoURL = userExist.coverPhotoURL;
 
-    if (previousAvatarURL) {
-      if (previousAvatarURL.id !== "qmf9eubrzyyvewjsmbjq") {
-        await cloudinary.uploader.destroy(userExist.avatarURL.id);
+      if (previousAvatarURL) {
+        if (previousAvatarURL.id !== "qmf9eubrzyyvewjsmbjq") {
+          await cloudinary.uploader.destroy(userExist.avatarURL.id);
+        }
       }
-    }
 
-    if (previousCoverPhotoURL) {
-      if (previousCoverPhotoURL.id !== "xfcxo6hhigcb0z8zoqok") {
-        await cloudinary.uploader.destroy(userExist.coverPhotoURL.id);
+      if (previousCoverPhotoURL) {
+        if (previousCoverPhotoURL.id !== "xfcxo6hhigcb0z8zoqok") {
+          await cloudinary.uploader.destroy(userExist.coverPhotoURL.id);
+        }
       }
-    }
 
-    avatar && (userExist.avatarURL = avatar);
-    coverPhoto && (userExist.coverPhotoURL = coverPhoto);
-    userName && (userExist.userName = userName);
-    email && (userExist.email = email);
-    userFirstName && (userExist.userFirstName = userFirstName);
-    userMiddleName && (userExist.userMiddleName = userMiddleName);
-    userLastName && (userExist.userLastName = userLastName);
-    bio && (userExist.bio = bio);
-
-    if (newPassword) {
-      if (await bcrypt.compare(currentPassword, userExist.password)) {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-        userExist.password = hashedPassword;
+      avatar && (userExist.avatarURL = avatar);
+      coverPhoto && (userExist.coverPhotoURL = coverPhoto);
+      if (userName && userName !== userExist.userName) {
+        userExist.userName = userName;
       }
+      email && (userExist.email = email);
+      userFirstName && (userExist.userFirstName = userFirstName);
+      userMiddleName && (userExist.userMiddleName = userMiddleName);
+      userLastName && (userExist.userLastName = userLastName);
+      bio && (userExist.bio = bio);
+
+      if (newPassword) {
+        if (await bcrypt.compare(currentPassword, userExist.password)) {
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(newPassword, salt);
+          userExist.password = hashedPassword;
+        }
+      }
+
+      await userExist.save();
+
+      res.status(200).json(userExist);
+    } else {
+      res.status(401).json({ message: "Email already taken" });
     }
-
-    await userExist.save();
-
-    res.status(200).json(userExist);
   }
 });
 
