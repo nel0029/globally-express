@@ -23,24 +23,13 @@ const createNewPost = asyncHandler(async (req, res) => {
     const savedPost = await newPost.save();
 
     if (newPost) {
-      const hashtagRegex = /^#([^\W_]+)$/; // Regular expression to match valid hashtags
-
       if (caption) {
-        const captionLines = caption.split("\n");
-        const words = captionLines
-          .map((line) =>
-            line.split(" ").map((word) => {
-              const match = word.match(hashtagRegex);
-              return match ? match[1] : null; // Extracting the hashtag name
-            })
-          )
-          .flat()
-          .filter(Boolean);
+        const hashtagRegex = /#[A-Za-z0-9]+/g;
 
-        console.log(words);
+        const matches = caption.match(hashtagRegex);
+        const hashtags = matches ? matches : [];
 
-        // Create and save hashtags in the Hashtags model
-        const hashtagPromises = words.map(async (hashtag) => {
+        const hashtagPromises = hashtags.map(async (hashtag) => {
           const newHashtag = new Hashtags({
             name: hashtag,
             postID: newPost._id,
