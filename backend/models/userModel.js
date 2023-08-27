@@ -24,8 +24,14 @@ const userSchema = new mongoose.Schema(
     },
 
     avatarURL: {
-      id: String,
-      url: String,
+      id: {
+        type: String,
+        default: process.env.AVATAR_DEFAULT_ID,
+      },
+      url: {
+        type: String,
+        default: process.env.AVATAR_DEFAULT_URL,
+      },
     },
 
     email: {
@@ -42,8 +48,14 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
     coverPhotoURL: {
-      id: String,
-      url: String,
+      id: {
+        type: String,
+        default: process.env.COVERPHOTO_DEFAULT_ID,
+      },
+      url: {
+        type: String,
+        default: process.env.COVERPHOTO_DEFAULT_URL,
+      },
     },
     bio: String,
     verified: {

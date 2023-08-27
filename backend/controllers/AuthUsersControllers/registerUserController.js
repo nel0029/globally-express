@@ -37,12 +37,12 @@ const registerUser = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   const newCoverPhoto = {
-    id: "xfcxo6hhigcb0z8zoqok",
-    url: "https://res.cloudinary.com/dedny49m6/image/upload/v1687961548/xfcxo6hhigcb0z8zoqok.jpg",
+    id: process.env.COVERPHOTO_DEFAULT_ID,
+    url: process.env.COVERPHOTO_DEFAULT_URL,
   };
   const newAvatar = {
-    id: "qmf9eubrzyyvewjsmbjq",
-    url: "https://res.cloudinary.com/dedny49m6/image/upload/v1688284898/qmf9eubrzyyvewjsmbjq.jpg",
+    id: process.env.AVATAR_DEFAULT_ID,
+    url: process.env.AVATAR_DEFAULT_URL,
   };
   // Create the User
   const user = await Users.create({

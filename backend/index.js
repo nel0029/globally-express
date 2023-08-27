@@ -45,7 +45,7 @@ app.use("/auth", require("./routes/userAuthRoutes"));
 app.use("/messages", require("./routes/messagesRoutes"));
 app.use("/notifications", require("./routes/notificationsRoutes"));
 app.use("/explore", require("./routes/searchRoutes"));
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+//app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 //For Sockets
 const { ActiveUsers } = require("./models/userModel");
