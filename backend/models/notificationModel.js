@@ -1,102 +1,104 @@
-const mongoose = require('mongoose');
-const { Users } = require('./userModel')
-const moment = require('moment-timezone');
-const { ObjectId } = require('mongodb');
+/** @format */
 
+const mongoose = require("mongoose");
+const { Users } = require("./userModel");
+const moment = require("moment-timezone");
+const { ObjectId } = require("mongodb");
 
-const notificationsSchema = mongoose.Schema({
+const notificationsSchema = mongoose.Schema(
+  {
     actionType: {
-        type: String
+      type: String,
     },
     postID: {
-        type: mongoose.Schema.Types.ObjectId
+      type: mongoose.Schema.Types.ObjectId,
     },
 
     postType: {
-        type: String
+      type: String,
     },
 
     actionID: {
-        type: mongoose.Schema.Types.ObjectId
+      type: mongoose.Schema.Types.ObjectId,
     },
 
     actorID: {
-        type: mongoose.Schema.Types.ObjectId,
-
+      type: mongoose.Schema.Types.ObjectId,
     },
     targetID: {
-        type: mongoose.Schema.Types.ObjectId,
-
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    seen: {
+      type: Boolean,
     },
     createdAt: {
-        type: Date,
-        default: Date.now
-    }
-},
-    {
-        timestamps: true
-    })
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-notificationsSchema.pre('save', function (next) {
-
-    this.createdAt = moment(this.createdAt).tz('Asia/Manila');
-    next();
+notificationsSchema.pre("save", function (next) {
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
 });
 
-const unseenNotificationsSchema = mongoose.Schema({
+const unseenNotificationsSchema = mongoose.Schema(
+  {
     targetID: {
-        type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
     },
 
     unseenNotificationsCount: {
-        type: Number
+      type: Number,
     },
 
-
     createdAt: {
-        type: Date,
-        default: Date.now
-    }
-},
-    {
-        timestamps: true
-    })
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-
-unseenNotificationsSchema.pre('save', function (next) {
-
-    this.createdAt = moment(this.createdAt).tz('Asia/Manila');
-    next();
+unseenNotificationsSchema.pre("save", function (next) {
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
 });
 
-
-
-const unseenMessagesSchema = mongoose.Schema({
+const unseenMessagesSchema = mongoose.Schema(
+  {
     targetID: {
-        type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
     },
     unseenMessagesCount: {
-        type: Number
+      type: Number,
     },
     createdAt: {
-        type: Date,
-        default: Date.now
-    }
-},
-    {
-        timestamps: true
-    })
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-
-unseenMessagesSchema.pre('save', function (next) {
-
-    this.createdAt = moment(this.createdAt).tz('Asia/Manila');
-    next();
+unseenMessagesSchema.pre("save", function (next) {
+  this.createdAt = moment(this.createdAt).tz("Asia/Manila");
+  next();
 });
 
+const Notifications = mongoose.model("Notifications", notificationsSchema);
+const UnseenNotifications = mongoose.model(
+  "UnseenNotifications",
+  unseenNotificationsSchema
+);
+const UnseenMessages = mongoose.model("UnseenMessages", unseenMessagesSchema);
 
-const Notifications = mongoose.model('Notifications', notificationsSchema)
-const UnseenNotifications = mongoose.model('UnseenNotifications', unseenNotificationsSchema)
-const UnseenMessages = mongoose.model("UnseenMessages", unseenMessagesSchema)
-
-module.exports = { Notifications, UnseenNotifications, UnseenMessages }
+module.exports = { Notifications, UnseenNotifications, UnseenMessages };

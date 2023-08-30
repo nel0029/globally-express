@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
 const readAllNotifications = asyncHandler(async (req, res) => {
-  const { userID } = req.query;
+  const { userID, markAllAsRead } = req.query;
 
   const notifications = await Notifications.aggregate([
     {
@@ -37,11 +37,25 @@ const readAllNotifications = asyncHandler(async (req, res) => {
         actorUserName: { $arrayElemAt: ["$actor.userName", 0] },
         actorAvatarURL: { $arrayElemAt: ["$actor.avatarURL", 0] },
         verified: { $arrayElemAt: ["$actor.verified", 0] },
+        seen: 1,
       },
     },
   ]);
 
-  res.status(200).json(notifications);
+  if (markAllAsRead === true) {
+    const notificationIDs = notifications.map(
+      (notification) => notification._id
+    );
+
+    await Notifications.updateMany(
+      { _id: { $in: notificationIDs } },
+      { $set: { seen: true } }
+    );
+
+    res.status(200).json(notifications);
+  } else {
+    res.status(200).json(notifications);
+  }
 });
 
 module.exports = readAllNotifications;
