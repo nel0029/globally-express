@@ -1,11 +1,11 @@
 /** @format */
 
 const cloudinary = require("../utils/cloudinary");
-const uploadFiles = require("./uploadFiles");
+const upload = require("./upload");
 const fs = require("fs");
 
 const uploadMiddleware = (req, res, next) => {
-  uploadFiles.single("file")(req, res, (err) => {
+  upload.single("file")(req, res, (err) => {
     if (err) {
       return res
         .status(500)
