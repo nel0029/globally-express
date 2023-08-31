@@ -95,7 +95,17 @@ const UpdateUserAccount = asyncHandler(async (req, res) => {
 
       await userExist.save();
 
-      res.status(200).json(userExist);
+      const existingData = {
+        userFirstName: userExist.userFirstName,
+        userMiddleName: userExist.userMiddleName,
+        userLastName: userExist.userLastName,
+        userName: userExist.userName,
+        bio: userExist.bio,
+        email: userExist.email,
+        avatarURL: userExist.avatarURL,
+        coverPhotoURL: userExist.coverPhotoURL,
+      };
+      res.status(200).json(existingData);
     } else {
       res.status(401).json({ message: "Email already taken" });
     }
