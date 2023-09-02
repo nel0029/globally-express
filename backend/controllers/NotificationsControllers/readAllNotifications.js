@@ -9,7 +9,6 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const readAllNotifications = asyncHandler(async (req, res) => {
   const { userID, markAllAsRead } = req.query;
-  console.log(req.query);
 
   const notifications = await Notifications.aggregate([
     {
