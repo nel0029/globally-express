@@ -4,11 +4,11 @@ const {
   Posts,
   PollOptions,
   PollRespondents,
+  Hashtags,
 } = require("../../models/postsModel");
 const { Users } = require("../../models/userModel");
+const { Notifications } = require("../../models/notificationModel");
 const asyncHandler = require("express-async-handler");
-const fs = require("fs");
-const path = require("path");
 
 const cloudinary = require("../../utils/cloudinary");
 
@@ -32,6 +32,11 @@ const deletePost = asyncHandler(async (req, res) => {
           Posts.findByIdAndDelete(postExists._id),
           PollOptions.deleteMany({ postID: postExists._id }),
           PollRespondents.deleteMany({ postID: postExists._id }),
+          Hashtags.deleteMany({ postID: postExists._id }),
+          Notifications.deleteMany({
+            postID: postExists._id,
+            targetID: postExists.authorID,
+          }),
         ]);
 
         res.status(202).json({ postID: postExists._id });

@@ -1,7 +1,7 @@
 /** @format */
 
 const { Users } = require("../../models/userModel");
-const { Reposts } = require("../../models/postsModel");
+const { Reposts, Hashtags } = require("../../models/postsModel");
 const asyncHandler = require("express-async-handler");
 
 const updateRepost = asyncHandler(async (req, res) => {
@@ -13,6 +13,24 @@ const updateRepost = asyncHandler(async (req, res) => {
     if (repostExists) {
       if (repostExists.authorID.toString() === String(userExists._id)) {
         repostExists.caption = caption;
+
+        if (caption) {
+          const hashtagRegex = /#[A-Za-z0-9]+/g;
+
+          const matches = caption.match(hashtagRegex);
+          const hashtags = matches ? matches : [];
+
+          const hashtagPromises = hashtags.map(async (hashtag) => {
+            const newHashtag = new Hashtags({
+              name: hashtag,
+              postID: repostExists._id,
+              postType: repostExists.type,
+            });
+            await newHashtag.save();
+          });
+
+          await Promise.all(hashtagPromises);
+        }
         await repostExists.save();
 
         res.status(202).json(repostExists);

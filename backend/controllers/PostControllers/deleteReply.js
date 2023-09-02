@@ -1,6 +1,12 @@
 /** @format */
 
-const { Posts, Replies, Reposts, Likes } = require("../../models/postsModel");
+const {
+  Posts,
+  Replies,
+  Reposts,
+  Hashtags,
+} = require("../../models/postsModel");
+const { Notifications } = require("../../models/notificationModel");
 const { Users } = require("../../models/userModel");
 const asyncHandler = require("express-async-handler");
 const cloudinary = require("../../utils/cloudinary");
@@ -21,7 +27,14 @@ const deleteReply = asyncHandler(async (req, res) => {
           })
         );
 
-        await Promise.all([Replies.findByIdAndDelete(replyExists._id)]);
+        await Promise.all([
+          Replies.findByIdAndDelete(replyExists._id),
+          Hashtags.deleteMany({ postID: postExists._id }),
+          Notifications.deleteMany({
+            postID: postExists._id,
+            targetID: postExists.authorID,
+          }),
+        ]);
 
         switch (replyExists.parentType) {
           case "post":

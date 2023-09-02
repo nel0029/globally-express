@@ -1,10 +1,14 @@
 /** @format */
 
-const { Posts, Replies, Reposts, Likes } = require("../../models/postsModel");
+const {
+  Posts,
+  Replies,
+  Reposts,
+  Hashtags,
+} = require("../../models/postsModel");
+const { Notifications } = require("../../models/notificationModel");
 const { Users } = require("../../models/userModel");
 const asyncHandler = require("express-async-handler");
-const fs = require("fs");
-const path = require("path");
 
 const deleteRepost = asyncHandler(async (req, res) => {
   const { authorID, postID } = req.query;
@@ -16,7 +20,14 @@ const deleteRepost = asyncHandler(async (req, res) => {
 
     if (repostExists) {
       if (repostExists.authorID.toString() === authorID) {
-        await Promise.all([Reposts.findByIdAndDelete(repostExists._id)]);
+        await Promise.all([
+          Reposts.findByIdAndDelete(repostExists._id),
+          Hashtags.deleteMany({ postID: postExists._id }),
+          Notifications.deleteMany({
+            postID: postExists._id,
+            targetID: postExists.authorID,
+          }),
+        ]);
 
         switch (repostExists.parentType) {
           case "post":
