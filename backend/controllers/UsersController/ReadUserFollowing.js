@@ -9,6 +9,7 @@ const ReadUserFollowing = asyncHandler(async (req, res) => {
   const { userID } = req.query;
 
   const userExists = await Users.findOne({ userName: userName });
+  const requesterExists = await Users.findById(userID);
 
   if (userExists) {
     const userFollowing = await Following.aggregate([
@@ -93,7 +94,11 @@ const ReadUserFollowing = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json(userFollowing);
+    const response = {
+      userName: requesterExists.userName,
+      userFollowing: userFollowing,
+    };
+    res.status(200).json(response);
   } else {
     res.status(404).json({ message: "User Not Found" });
   }
