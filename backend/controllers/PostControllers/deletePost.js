@@ -21,7 +21,10 @@ const deletePost = asyncHandler(async (req, res) => {
     const postExists = await Posts.findById(postID);
 
     if (postExists) {
-      if (postExists.authorID.toString() === authorID) {
+      if (
+        postExists.authorID.toString() === authorID ||
+        userExists.role === "admin"
+      ) {
         await Promise.all(
           postExists.mediaURL.map(async (photoPath) => {
             await cloudinary.uploader.destroy(photoPath.id);

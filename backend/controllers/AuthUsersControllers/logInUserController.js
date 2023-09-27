@@ -25,6 +25,7 @@ const logInUser = asyncHandler(async (req, res) => {
       bio: user.bio,
       verified: user.verified,
       isLogIn: true,
+      role: user.role,
     });
   } else {
     res.status(400).json({

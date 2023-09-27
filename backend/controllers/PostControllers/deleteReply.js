@@ -20,7 +20,10 @@ const deleteReply = asyncHandler(async (req, res) => {
     const replyExists = await Replies.findById(postID);
 
     if (replyExists) {
-      if (replyExists.authorID.toString() === authorID) {
+      if (
+        replyExists.authorID.toString() === authorID ||
+        userExists.role === "admin"
+      ) {
         await Promise.all(
           replyExists.mediaURL.map(async (photoPath) => {
             await cloudinary.uploader.destroy(photoPath._id);
@@ -29,10 +32,10 @@ const deleteReply = asyncHandler(async (req, res) => {
 
         await Promise.all([
           Replies.findByIdAndDelete(replyExists._id),
-          Hashtags.deleteMany({ postID: postExists._id }),
+          Hashtags.deleteMany({ postID: replyExists._id }),
           Notifications.deleteMany({
-            postID: postExists._id,
-            targetID: postExists.authorID,
+            postID: replyExists._id,
+            targetID: replyExists.authorID,
           }),
         ]);
 

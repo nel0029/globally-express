@@ -19,13 +19,16 @@ const deleteRepost = asyncHandler(async (req, res) => {
     const repostExists = await Reposts.findById(postID);
 
     if (repostExists) {
-      if (repostExists.authorID.toString() === authorID) {
+      if (
+        repostExists.authorID.toString() === authorID ||
+        userExists.role === "admin"
+      ) {
         await Promise.all([
           Reposts.findByIdAndDelete(repostExists._id),
-          Hashtags.deleteMany({ postID: postExists._id }),
+          Hashtags.deleteMany({ postID: repostExists._id }),
           Notifications.deleteMany({
-            postID: postExists._id,
-            targetID: postExists.authorID,
+            postID: repostExists._id,
+            targetID: repostExists.authorID,
           }),
         ]);
 

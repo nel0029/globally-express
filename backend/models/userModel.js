@@ -61,7 +61,9 @@ const userSchema = new mongoose.Schema(
     verified: {
       type: Boolean,
     },
-
+    role: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

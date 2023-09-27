@@ -16,6 +16,7 @@ const SearchUser = require("../controllers/UsersController/SearchUser");
 const ReadAccountDetails = require("../controllers/UsersController/ReadAccountDetails");
 const UpdateUserAccount = require("../controllers/UsersController/UpdateUserAccount");
 const ReadUsersToFollow = require("../controllers/UsersController/ReadUsersToFollow");
+const deleteUserPosts = require("../controllers/UsersController/DeleteUserPosts");
 const uploadFiles = require("../middleware/uploadFiles");
 const uploadAvatarAndCoverPhoto = require("../middleware/uploadAvatarAndCoverPhoto");
 
@@ -38,5 +39,6 @@ router.get("/account/data/:userID", protect, ReadAccountDetails);
 router.get("/:userName", protect, ReadUserDetails);
 router.get("/:userName/following", protect, ReadUserFollowing);
 router.get("/:userName/followers", protect, ReadUserFollowers);
+router.delete("/posts/delete/:userName", deleteUserPosts);
 
 module.exports = router;
